@@ -12,6 +12,31 @@ First we will split the data into 60% training set and 40% test set, then perfor
 
 Since the target we are trying to predict is continuous, and the features include a mixture of categorical and continuous variables, we will test out a few predictive regression models and assess their performance, then select the one that performs with the highest accuracy as the final model. The data set is large, has many features, and will require scaling transformations, so a few suitable models that we will test out are the `Ridge()`, `SVR()`, and `RandomForestRegressor()` models. We will also use `RandomSearchCV()` to cross-validate and optimize the models' hyperparameter values. Once the final model is selected and fitted to the entire training set, we will use it to predict average user ratings on the test set, measure the accuracy of the model, and report the model's performance results in a table.
 
+The exploratory data analysis report can be found [here](https://github.com/UBC-MDS/DSCI_522_group_10_2022/blob/main/src/boardgame_rating_eda.ipynb).
+
+## Usage
+
+To reproduce this analysis, clone this repository, install the dependencies listed below, and run the following two commands at the command line/terminal from the root directory of this project:
+
+
+    python src/download_data.py --url=https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-01-25/ratings.csv --out_file=data/raw/ratings.csv
+
+
+    python src/download_data.py --url=https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-01-25/details.csv --out_file=data/raw/details.csv
+
+
+## Dependencies
+
+- Python 3.10.6 and Python packages:
+    - docopt-ng==0.8.1
+    - requests 2.27.1
+    - numpy==1.23.4
+    - pandas==1.4.4
+    - altair==4.2.0
+    - altair_saver
+    - scikit-learn==1.1.3
+    - ipykernel
+
 ## License
 
 All Board Game User Rating Predictor materials are licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0) License and the MIT License.
