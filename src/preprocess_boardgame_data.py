@@ -38,17 +38,19 @@ def main(in_file1, in_file2, out_dir):
     train_df, test_df = train_test_split(boardgame_df, test_size=0.5, random_state=42)
 
     # write the training split to the output directory 
+    train_split_path = out_dir + "/training_split.csv"
+    test_split_path = out_dir + "/testing_split.csv"
     try:
-        train_df.to_csv(out_dir + "/training_split.csv", index=False)
+        train_df.to_csv(train_split_path, index=False)
     except:
-        os.makedirs(os.path.dirname(out_dir + "/training_split.csv"))
-        train_df.to_csv(out_dir + "/training_split.csv", index=False)
+        os.makedirs(os.path.dirname(train_split_path))
+        train_df.to_csv(train_split_path, index=False)
     # write the testing split to the output directory
     try:
-        test_df.to_csv(out_dir + "/testing_split.csv", index=False)
+        test_df.to_csv(test_split_path, index=False)
     except:
-        os.makedirs(os.path.dirname(out_dir + "/testing_split.csv"))
-        test_df.to_csv(out_dir + "/testing_split.csv", index=False)
+        os.makedirs(os.path.dirname(test_split_path))
+        test_df.to_csv(test_split_path, index=False)
     
     # Sanity Check Unit Tests
     test_merged_df_columns_correct(boardgame_df)
