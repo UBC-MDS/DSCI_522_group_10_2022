@@ -71,9 +71,6 @@ def main(in_file1, in_file2, out_dir):
 def test_merged_df_columns_correct(df):
     assert len(df.columns) == 15, f"Expected 15 columns in the merged dataframe, got {len(df.columns)}."
 
-def test_categorical_features_correct_type(df):
-    assert type(df["boardgamecategory"].loc[0]) == list, f"Expected type to be list, got {type(df['boardgamecategory'].loc[0])}"
-
 def test_processed_file_exist():
     file_path = "data/processed/boardgame.csv"
     assert os.path.isfile(file_path), "Could not find boardgame.csv in the processed data folder."
