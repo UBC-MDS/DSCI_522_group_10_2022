@@ -39,6 +39,7 @@ def main(in_file1, in_file2, out_dir):
     boardgame_df = boardgame_df.dropna()
 
     # process columns that appear like lists but are actually strings
+    # reference: https://stackoverflow.com/questions/25572247/how-to-convert-array-string-to-an-array-in-python
     categorical_features = ["boardgamecategory", "boardgamemechanic", "boardgamefamily", "boardgameartist", "boardgamepublisher"]
     for feat in categorical_features:
         boardgame_df[feat] = boardgame_df[feat].apply(literal_eval)
