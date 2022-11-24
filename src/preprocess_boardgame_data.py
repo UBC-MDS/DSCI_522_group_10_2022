@@ -38,17 +38,10 @@ def main(in_file1, in_file2, out_dir):
     boardgame_df = details.merge(ratings, on="id", how="left").drop(columns=["id"])
     boardgame_df = boardgame_df.dropna()
 
-    # process columns that appear like lists but are actually strings
-    # reference: https://stackoverflow.com/questions/25572247/how-to-convert-array-string-to-an-array-in-python
-    categorical_features = ["boardgamecategory", "boardgamemechanic", "boardgamefamily", "boardgameartist", "boardgamepublisher"]
-    for feat in categorical_features:
-        boardgame_df[feat] = boardgame_df[feat].apply(literal_eval)
-
     train_df, test_df = train_test_split(boardgame_df, test_size=0.5, random_state=42)
     processed_data_path = out_dir + "/boardgame.csv"
     train_split_path = out_dir + "/training_split.csv"
     test_split_path = out_dir + "/testing_split.csv"
-
     # write the processed data to the output directory
     try:
         boardgame_df.to_csv(processed_data_path, index=False)
