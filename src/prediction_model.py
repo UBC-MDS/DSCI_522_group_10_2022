@@ -89,4 +89,58 @@ def main(training_file, testing_file, results_dir):
     # Split the data into respective x and y dataframes
     X_train, y_train = train_df.drop(columns="average"), train_df["average"]
     X_test, y_test = test_df.drop(columns="average"), test_df["average"]
-    
+
+    # Defining features for preprocessor
+    numerical_features = ["yearpublished", 
+                          "minplayers", 
+                          "maxplayers", 
+                          "playingtime", 
+                          "minplaytime", 
+                          "maxplaytime", 
+                          "minage"]
+
+    text_feature = "description"
+
+    # Define scoring methods for model evaluation
+    scoring_dict = {
+    "r2": "r2",
+    "MAPE": "neg_mean_absolute_percentage_error",
+    "neg_rmse": "neg_root_mean_squared_error",
+    "neg_mse": "neg_mean_squared_error",
+    }   
+
+    # Define dictionary for storing cross-validation results
+    cross_val_results = {}
+
+    # Define preprocessor for column transformations
+    preprocessor = make_column_transformer(
+        (StandardScaler(), numerical_features),
+        (CountVectorizer(stop_words="english", max_features=1000), text_feature),
+        (MyMultiLabelBinarizer(), "boardgamecategory"),
+        (MyMultiLabelBinarizer(), "boardgamemechanic"),
+        (MyMultiLabelBinarizer(), "boardgamefamily"),
+        (MyMultiLabelBinarizer(), "boardgamedesigner"),
+        (MyMultiLabelBinarizer(), "boardgameartist"),
+        (MyMultiLabelBinarizer(), "boardgamepublisher")
+    )
+
+    # Create and score dummy regressor for baseline model
+    dummy_regressor = DummyRegressor()
+    cross_val_results['dummy_regressor'] = pd.DataFrame(cross_validate(dummy_regressor, X_train, y_train, return_train_score = True, scoring=scoring_dict)).agg(['mean', 'std']).round(3).T    cross_val_results['dummy_regressor']
+
+    # Create pipeline for Ridge model hyperparameter optimization
+    pipe_ridge = make_pipeline(
+        preprocessor,
+        Ridge()
+    )
+
+    # Create parameter distribution for Ridge alpha hyperparameter
+    param_dist_ridge = {
+        "ridge__alpha": 10.0 ** np.arange(-6, 6, 2)
+    }
+
+    # Perform randomized search for optimal hyper parameter
+    ridge_search = RandomizedSearchCV(
+        pipe_ridge, param_dist_ridge, n_iter=12, n_jobs=-1, return_train_score=True
+    )
+    ridge_search.fit(X_train, y_train)
