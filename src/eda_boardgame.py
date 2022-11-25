@@ -26,7 +26,6 @@ Options:
 
 import os
 import pandas as pd
-import numpy as np
 import altair as alt
 import vl_convert as vlc
 from ast import literal_eval
@@ -58,6 +57,13 @@ def main(in_file, out_dir):
     save_chart(top_10_categories_plot, out_dir + "top_10_boardgame_categories.png")
     save_chart(top_10_mechanics_plot, out_dir + "top_10_boardgame_mechanics.png")
     save_chart(top_10_families_plot, out_dir + "top_10_boardgame_families.png")
+
+    # sanity check unit tests
+    test_figure_images_exist(out_dir + "rating_distribution.png")
+    test_figure_images_exist(out_dir + "numeric_feature_distribution.png")
+    test_figure_images_exist(out_dir + "top_10_boardgame_categories.png")
+    test_figure_images_exist(out_dir + "top_10_boardgame_mechanics.png")
+    test_figure_images_exist(out_dir + "top_10_boardgame_families.png")
 
 
 def plot_rating_distribution(df):
@@ -221,6 +227,10 @@ def save_chart(chart, filename, scale_factor=1):
             f.write(vlc.vegalite_to_png(chart.to_dict(), scale=scale_factor))
     else:
         raise ValueError("Only svg and png formats are supported")   
+
+
+def test_figure_images_exist(file_path):
+    assert os.path.isfile(file_path), f"Could not locate {file_path}."
 
 
 if __name__ == "__main__":
