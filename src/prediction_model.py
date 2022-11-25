@@ -52,4 +52,41 @@ warnings.filterwarnings('ignore')
 # -------------------------------------------------------------------------------------------------
 
 opt = docopt(__doc__)
+alt.renderers.enable('mimetype')
+alt.data_transformers.enable('data_server')
 
+class MyMultiLabelBinarizer(TransformerMixin):
+    def __init__(self, *args, **kwargs):
+        self.encoder = MultiLabelBinarizer(*args, **kwargs)
+
+    def fit(self, x, y=None):
+        self.encoder.fit(x)
+        self.classes_ = self.encoder.classes_
+        return self
+
+    def transform(self, x, y=None):
+        return self.encoder.transform(x)
+    
+    def get_params(self, deep=True):
+        return self.encoder.get_params()
+
+def main(training_file, testing_file, results_dir):
+    # Create the training and testing data frames
+    train_df = pd.read_csv("../data/processed/training_split.csv")
+    test_df = pd.read_csv("../data/processed/testing_split.csv")
+
+    # Turn the list-like string columns into actual lists for MultiLabelBinarizer
+    categorical_list_features = ["boardgamecategory",
+                                 "boardgamemechanic", 
+                                 "boardgamefamily", 
+                                 "boardgamedesigner", 
+                                 "boardgameartist", 
+                                 "boardgamepublisher"]
+    for feat in categorical_list_features:
+        train_df[feat] = train_df[feat].apply(literal_eval)
+        test_df[feat] = test_df[feat].apply(literal_eval)
+
+    # Split the data into respective x and y dataframes
+    X_train, y_train = train_df.drop(columns="average"), train_df["average"]
+    X_test, y_test = test_df.drop(columns="average"), test_df["average"]
+    
