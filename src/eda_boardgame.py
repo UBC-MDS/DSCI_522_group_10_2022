@@ -1,5 +1,14 @@
+# Author: Eric Tsai
+# Date: 2022-11-24 
+
 """
-A script reads in a processed training dataset and performs EDA to output figures as png files.
+A script reads in a processed training dataset and performs EDA to output 5 figure
+    - rating distribution
+    - numeric feature distribution
+    - top 10 boardgame categories
+    - top 10 boardgame mechanics
+    - top 10 boardgame families
+as png files.
 
 Usage: src/eda_boardgame.py --in_file=<in_file> --out_dir=<out_dir> 
  
@@ -9,10 +18,10 @@ Options:
 """
 
 # Example:
-# python src/eda_boardgame.py --in_file="data/processed/training_split.csv" --out_dir="results"
+# python src/eda_boardgame.py --in_file="data/processed/training_split.csv" --out_dir="results/"
 
 # input file: "data/processed/training_split.csv"
-# output directory: "results"
+# output directory: "results/"
 
 
 import os
@@ -42,9 +51,13 @@ def main(in_file, out_dir):
     rating_plot = plot_rating_distribution(train_df)
     numeric_feats_bar_plot = plot_numeric_feature_distribution(train_df)
     top_10_categories_plot = plot_top_10_categories(binarized_rating_df)
-    save_chart(rating_plot, out_dir + "/rating_distribution.png")
-    save_chart(numeric_feats_bar_plot, out_dir + "/numeric_feature_distribution.png")
-    save_chart(top_10_categories_plot, out_dir + "/top_10_categories.png")
+    top_10_mechanics_plot = plot_top_10_mechanics(binarized_rating_df)
+    top_10_families_plot = plot_top_10_families(binarized_rating_df)
+    save_chart(rating_plot, out_dir + "rating_distribution.png")
+    save_chart(numeric_feats_bar_plot, out_dir + "numeric_feature_distribution.png")
+    save_chart(top_10_categories_plot, out_dir + "top_10_boardgame_categories.png")
+    save_chart(top_10_mechanics_plot, out_dir + "top_10_boardgame_mechanics.png")
+    save_chart(top_10_families_plot, out_dir + "top_10_boardgame_families.png")
 
 
 def plot_rating_distribution(df):
@@ -82,6 +95,71 @@ def plot_numeric_feature_distribution(df):
     return numeric_feats_bar_chart
 
 
+def plot_top_10_categories(df):
+    '''
+    Creates a bar chart of the top 10 boardgame categories
+    '''
+    category_binary_df = binarize_list_column(df, "boardgamecategory")
+    top_10_categories = category_binary_df.sum(numeric_only=True).sort_values(ascending=False)[1:11].index.tolist()
+    category_long = df_to_long_format(category_binary_df, "boardgamecategory")
+    top_10_categories_plot = alt.Chart(
+        category_long.query("boardgamecategory in @top_10_categories"),
+        title = "Comparing ratings of top 10 boardgame categories"
+    ).mark_bar().encode(
+        x = alt.X("rating", axis=alt.Axis(title=None, labels=False, ticks=False)),
+        y = alt.Y("value", title="Count"),
+        column = alt.Column('boardgamecategory', header=alt.Header(title=None, labelOrient='bottom'), sort=top_10_categories),
+        color = alt.Color("rating", title="Rating")
+    )
+    return top_10_categories_plot
+
+
+def plot_top_10_mechanics(df):
+    '''
+    Creates a bar chart of the top 10 boardgame mechanics
+    '''
+    mechanic_count_df = binarize_list_column(df, "boardgamemechanic")
+    top_10_mechanics = mechanic_count_df.sum(numeric_only=True).sort_values(ascending=False)[1:11].index.tolist()
+    mechanic_long = df_to_long_format(mechanic_count_df, "boardgamemechanic")
+    top_10_mechanic_plot = alt.Chart(
+        mechanic_long.query("boardgamemechanic in @top_10_mechanics"),
+        title = "Comparing ratings of top 10 boardgame mechanics"
+    ).mark_bar().encode(
+        alt.X("rating", axis=alt.Axis(title=None, labels=False, ticks=False)),
+        alt.Y("value", title="Count"),
+        column = alt.Column(
+            'boardgamemechanic', 
+            header = alt.Header(title=None, labelOrient='bottom', labelAngle=330, labelAnchor="end"),
+            sort = top_10_mechanics
+        ),
+        color = alt.Color("rating", title="Rating")
+    )
+    return top_10_mechanic_plot
+
+
+def plot_top_10_families(df):
+    '''
+    Creates a bar chart of the top 10 boardgame families
+    '''
+    family_count_df = binarize_list_column(df, "boardgamefamily")
+    top_10_families = family_count_df.sum(numeric_only=True).sort_values(ascending=False)[1:11].index.tolist()
+    family_long = df_to_long_format(family_count_df, "boardgamefamily")
+    top_10_family_plot = alt.Chart(
+        family_long.query("boardgamefamily in @top_10_families"),
+        title = "Comparing ratings of top 10 boardgame mechanics"
+    ).mark_bar().encode(
+        alt.X("rating", axis=alt.Axis(title=None, labels=False, ticks=False)),
+        alt.Y("value", title="Count"),
+        column = alt.Column(
+            'boardgamefamily', 
+            header = alt.Header(title=None, labelOrient='bottom', labelAngle=330, labelAnchor="end"),
+            sort = top_10_families
+        ),
+        color = alt.Color("rating", title="Rating")
+    )
+    return top_10_family_plot
+
+
 def augment_df(df):
     '''
     Adds a new column with value of either "high" or "low to the dataframe based on the average column's value
@@ -98,29 +176,26 @@ def augment_df(df):
     return binarized_rating_df
 
 
-def plot_top_10_categories(df):
+def binarize_list_column(df, column):
     '''
-    Creates a bar chart of the top 10 boardgame categories
+    Helper function for plotting categorical features.
+    Transform the input column containing list objects in the DataFrame into separate binary columns and concatenates the 
+    rating column to the transformed DataFrame
     '''
     mlb = MultiLabelBinarizer()
-    category_trans = mlb.fit_transform(df["boardgamecategory"])
-    category_binary_df = pd.concat([pd.DataFrame(category_trans, columns=mlb.classes_), df["rating"].reset_index()], axis=1)
-    top_10_categories = category_binary_df.sum(numeric_only=True).sort_values(ascending=False)[1:11].index.tolist()
-    # Group the categories by rating to get the count of each category for each rating
-    category_grouped = category_binary_df.groupby("rating").sum().T
-    category_grouped["category"] = category_grouped.index
-    category_grouped.reset_index(drop=True)
-    category_long = category_grouped.melt("category")
-    top_10_categories_plot = alt.Chart(
-        category_long.query("category in @top_10_categories"),
-        title = "Top 10 Categories and Their Rating Comparisons"
-    ).mark_bar().encode(
-        x = alt.X("rating", axis=alt.Axis(title=None, labels=False, ticks=False)),
-        y = alt.Y("value", title="Count"),
-        column = alt.Column('category', header=alt.Header(title=None, labelOrient='bottom')),
-        color = alt.Color("rating", title="Rating")
-    )
-    return top_10_categories_plot
+    transformed = mlb.fit_transform(df[column])
+    return pd.concat([pd.DataFrame(transformed, columns=mlb.classes_), df["rating"].reset_index()], axis=1)
+
+
+def df_to_long_format(df, column):
+    '''
+    Helper function for plotting categorical features. 
+    Group the DataFrame by rating and transform on the input column into a long format
+    '''
+    grouped_df = df.groupby("rating").sum().T
+    grouped_df[column] = grouped_df.index
+    grouped_df.reset_index(drop=True)
+    return grouped_df.melt(column)
 
 
 # Credits to Joel Ostblom for this function
@@ -150,4 +225,3 @@ def save_chart(chart, filename, scale_factor=1):
 
 if __name__ == "__main__":
     main(opt["--in_file"], opt["--out_dir"])
-
