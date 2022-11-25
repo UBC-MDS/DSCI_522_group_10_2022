@@ -152,7 +152,7 @@ def plot_top_10_families(df):
     family_long = df_to_long_format(family_count_df, "boardgamefamily")
     top_10_family_plot = alt.Chart(
         family_long.query("boardgamefamily in @top_10_families"),
-        title = "Comparing ratings of top 10 boardgame mechanics"
+        title = "Comparing ratings of top 10 boardgame families"
     ).mark_bar().encode(
         alt.X("rating", axis=alt.Axis(title=None, labels=False, ticks=False)),
         alt.Y("value", title="Count"),
