@@ -23,3 +23,16 @@ library(kableExtra)
 # Introduction
 
 According to a small [survey](https://boardgamegeek.com/thread/557292/average-how-long-do-you-take-develop-game) on [BoardGameGeek](https://boardgamegeek.com/), many board game developers report that it takes them several months to develop a board game, sometimes over a year [@bbg-survey]. As board game enthusiasts, we aim to answer the following question: Given certain characteristics about a new board game, can we use a machine learning model to predict how users would rate the board game? Answering this question will help board game creators understand which characteristics enhance user enjoyment and make better decisions as they develop the game, saving them time and improving the popularity of their new board game.
+
+# Methods
+
+## Data
+
+We used a large data set containing user ratings and reviews for thousands of board games, created by [BoardGameGeek](https://boardgamegeek.com/) and made available by [tidytuesday](https://github.com/rfordatascience/tidytuesday), which can be found [here](https://github.com/rfordatascience/tidytuesday/tree/master/data/2022/2022-01-25) [@data]. The data consists of two data sets with each row representing a different board game. One data set contains the user ratings, and the other contains information about the board games, including names and descriptions, as well as several characteristics such as playing time, minimum age, number of  players, etc. We first prepossessed the data by joining the two data sets together, dropping unnecessary columns and columns with too many missing values, and splitting the data into 50% training set and 50% test set. Since the data set is sufficiently large, we also dropped rows with missing values to improve the speed of model training. The pre-processed data can be found [here](https://github.com/UBC-MDS/boardgame_rating_predictor/tree/main/data/processed). 
+
+## Analysis
+
+We used the random forest (RF) algorithm to build a regression model that predicts the average user rating based on various game features. The data used to fit the model was composed of the average user rating as the target, as well as a combination of numeric, categorical and textual variables as the predictors, including description, year published, minimum players, maximum players, playing time, minimum playtime, maximum playtime, minimum age, board game category, board game mechanic, board game family, board game designer, board game artist, and board game publisher. The RF hyperparameters `max_depth`, `max_features`, `bootstrap`, `min_samples_leaf`, and `min_samples_split` were optimized using 5-fold cross-validation in a randomized search with $R^2$ as the scoring metric. 
+
+To perform this analysis and create this report, the Python and R programming languages [@Python; @R] were used, along with the following Python and R packages: docopt [@docopt], numpy [@numpy], pandas [@pandas], altair [@altair], scikit-learn [@learn], tidyverse [@tidy], and knitr [@knitr]. The code used to conduct this analysis and create this report can be found [here](https://github.com/UBC-MDS/boardgame_rating_predictor).
+

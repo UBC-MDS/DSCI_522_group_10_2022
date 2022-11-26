@@ -365,6 +365,11 @@ machine learning model</h1>
 <div id="TOC">
 <ul>
 <li><a href="#introduction" id="toc-introduction">Introduction</a></li>
+<li><a href="#methods" id="toc-methods">Methods</a>
+<ul>
+<li><a href="#data" id="toc-data">Data</a></li>
+<li><a href="#analysis" id="toc-analysis">Analysis</a></li>
+</ul></li>
 </ul>
 </div>
 
@@ -381,6 +386,47 @@ question will help board game creators understand which characteristics
 enhance user enjoyment and make better decisions as they develop the
 game, saving them time and improving the popularity of their new board
 game.</p>
+</div>
+<div id="methods" class="section level1">
+<h1>Methods</h1>
+<div id="data" class="section level2">
+<h2>Data</h2>
+<p>We used a large data set containing user ratings and reviews for
+thousands of board games, created by <a href="https://boardgamegeek.com/">BoardGameGeek</a> and made available
+by <a href="https://github.com/rfordatascience/tidytuesday">tidytuesday</a>,
+which can be found <a href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2022/2022-01-25">here</a>
+<span class="citation">(<strong>data?</strong>)</span>. The data
+consists of two data sets with each row representing a different board
+game. One data set contains the user ratings, and the other contains
+information about the board games, including names and descriptions, as
+well as several characteristics such as playing time, minimum age,
+number of players, etc. We first prepossessed the data by joining the
+two data sets together, dropping unnecessary columns and columns with
+too many missing values, and splitting the data into 50% training set
+and 50% test set. Since the data set is sufficiently large, we also
+dropped rows with missing values to improve the speed of model training.
+The pre-processed data can be found <a href="https://github.com/UBC-MDS/boardgame_rating_predictor/tree/main/data/processed">here</a>.</p>
+</div>
+<div id="analysis" class="section level2">
+<h2>Analysis</h2>
+<p>We used the random forest (RF) algorithm to build a regression model
+that predicts the average user rating based on various game features.
+The data used to fit the model was composed of the average user rating
+as the target, as well as a combination of numeric, categorical and
+textual variables as the predictors, including description, year
+published, minimum players, maximum players, playing time, minimum
+playtime, maximum playtime, minimum age, board game category, board game
+mechanic, board game family, board game designer, board game artist, and
+board game publisher. The RF hyperparameters <code>max_depth</code>,
+<code>max_features</code>, <code>bootstrap</code>,
+<code>min_samples_leaf</code>, and <code>min_samples_split</code> were
+optimized using 5-fold cross-validation in a randomized search with
+<span class="math inline">\(R^2\)</span> as the scoring metric.</p>
+<p>To perform this analysis and create this report, the Python and R
+programming languages <span class="citation">(<strong>R?</strong>)</span> were used, along with the
+following Python and R packages: docopt <span class="citation">(<strong>docopt?</strong>)</span>, numpy <span class="citation">(<strong>numpy?</strong>)</span>, pandas <span class="citation">(<strong>pandas?</strong>)</span>, altair <span class="citation">(<strong>altair?</strong>)</span>, scikit-learn <span class="citation">(<strong>learn?</strong>)</span>, tidyverse <span class="citation">(<strong>tidy?</strong>)</span>, and knitr <span class="citation">(<strong>knitr?</strong>)</span>. The code used to
+conduct this analysis and create this report can be found <a href="https://github.com/UBC-MDS/boardgame_rating_predictor">here</a>.</p>
+</div>
 </div>
 
 
