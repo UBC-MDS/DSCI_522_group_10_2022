@@ -62,3 +62,24 @@ knitr::include_graphics("../results/top_10_boardgame_mechanics.png")
 
 As we have a combination of categorical, numerical, and textual features, we encoded the data using a column transformer to apply the following transformations: `StandardScaler()` on the numeric features, `CountVectorizer()` on the textual features, and `MultiLabelBinarizer()` on the categorical features. `MultiLabelBinarizer()` was used rather than `OneHotEncoder()` since the categorical features contain lists of multiple values per observation.
 
+Once the data was transformed, we chose to use a dummy regressor as the baseline model and tested the performance of two regression models, the ridge linear regression model and the random forest (RF) model. For each model, we used 5-fold cross-validation in a randomized search to find their respective hyperparameter values that return the best score, using the $R^2$ score as the performance metric. The table below shows that both models perform better than the dummy baseline, although they have fairly low cross-validation scores with less than 50% accuracy. The RF model returns a better cross-validation score (0.410) than the ridge model (0.375), although it has a much slower fit time. Additionally, both models appear to be over-fitting the data, with a large gap between the train score and cross-validation score, despite hyperparameter optimization. Nonetheless, since the RF model produced a higher cross-validation score, we refit the data using the RF model as the final board game rating predictor. 
+
+```{r cross-validation results, echo=FALSE, message=FALSE}
+model_comparison <- read_csv("../results/model_comparison_table.csv")
+
+colnames(model_comparison)[1] = "Metric"
+
+model_comparison <- model_comparison |>
+  filter(Metric %in% c("fit_time", "score_time", "test_r2", "train_r2"))
+
+knitr::kable(model_comparison, caption = "Table 1. Model performance results using cross-validation on training data.") |>
+  kableExtra::kable_styling(full_width = FALSE)
+```
+
+Our final model performed moderately on the test data, with a $R^2$ score of 0.480. As such, the model performed slightly better on the test set than on the training set. Considering the large size of the data set and 50/50 train/test split, this test score can be considered a reliable indicator of our model's performance on unseen data. Figure 5 below shows how the model performed on the test data as a scatter plot of the predicted versus actual user ratings. The overall accuracy of the predictions are portrayed by the orange fit line, which appears to be askew from perfect accuracy indicated by the blue line. Additionally, there appears to be a lot of variation in the predictions, as the points appear to be spread out away from the orange fit line. Nonetheless, the model appears to be more accurate at predicting ratings around 6.5, as shown by the intersection of the blue and orange lines. This aligns with the distribution of user ratings shown in Figure 1, suggesting that our model is better at predicting commonly occurring median ratings than rarely occurring high or low ratings.
+
+```{r prediction vs. actual, echo=FALSE, fig.cap="Figure 5. Scatter plot of actual vs. predicted user ratings of board games in the test set using the final model. Blue line indicates where predicted ratings equal the actual ratings with 100% accuracy. Orange line is the linear fit between the actual and predicted ratings.", out.height = '50%'}
+knitr::include_graphics("../results/results_plot.png")
+```
+
+Overall, our board game user rating predictor needs to be fine-tuned before it can be used to aid board game developers with their creative decisions. Since the test score was not very high, it would be useful to output the probability estimates of the predicted ratings so users can know how confident the model is about each prediction. The model could potentially be improved using feature selection methods to limit the number and choice of features to only those that are most important in predicting the user rating, thus eliminating "noisy" features that drown out the important patterns in the data when training the model. Additionally, the random forest model was slow and computationally intensive, so perhaps the Ridge linear regression model could be improved using polynomial feature extraction and feature selection to produce a more efficient solution.
