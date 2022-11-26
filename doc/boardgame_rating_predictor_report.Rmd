@@ -18,3 +18,8 @@ library(knitr)
 library(kableExtra)
 ```
 
+
+
+# Introduction
+
+According to a small [survey](https://boardgamegeek.com/thread/557292/average-how-long-do-you-take-develop-game) on [BoardGameGeek](https://boardgamegeek.com/), many board game developers report that it takes them several months to develop a board game, sometimes over a year [@bbg-survey]. As board game enthusiasts, we aim to answer the following question: Given certain characteristics about a new board game, can we use a machine learning model to predict how users would rate the board game? Answering this question will help board game creators understand which characteristics enhance user enjoyment and make better decisions as they develop the game, saving them time and improving the popularity of their new board game.
