@@ -18,7 +18,9 @@ library(knitr)
 library(kableExtra)
 ```
 
+# Summary
 
+In this project we have built and evaluated a predictive regression model that can be used to predict board game user ratings for new board games. The final model performed moderately well on the unseen test data set, with an $R^2$ score of 0.480. Although promising, our board game rating predictor needs further analysis to be fine tuned and improved in its efficiency and accuracy.
 
 # Introduction
 
@@ -46,7 +48,7 @@ knitr::include_graphics("../results/rating_distribution.png")
 
 With the exception of minimum age, the distributions of the numeric features appear to be heavily right skewed with most values falling towards lower values (Figure 2).
 
-```{r numeric-distributions, echo=FALSE, fig.cap="Figure 2. Distribution of numeric predictors.", out.width = '100%'}
+```{r numeric-distributions, echo=FALSE, fig.cap="Figure 2. Distributions of numeric predictors.", out.width = '100%'}
 knitr::include_graphics("../results/numeric_feature_distribution.png")
 ```
 
