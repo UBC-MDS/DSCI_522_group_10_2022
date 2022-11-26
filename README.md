@@ -20,10 +20,11 @@ The exploratory data analysis report can be found [here](https://github.com/UBC-
 
 ## Report
 
-The final report of the project can be found [here]()
+The final report of the project can be found [here](https://github.com/UBC-MDS/boardgame_rating_predictor/blob/main/doc/boardgame_rating_predictor_report.Rmd)
+
 
 ## Usage
-  1. Download the dependencies from the .yaml [file]()
+  1. Download the dependency file from the .yaml [file](https://github.com/UBC-MDS/boardgame_rating_predictor/blob/main/envboard.yaml)
   
   2. Create the environment
   
@@ -56,10 +57,14 @@ The final report of the project can be found [here]()
   
     python src/preprocess_boardgame_data.py --in_file1="data/raw/ratings.csv" --in_file2="data/raw/details.csv" --out_dir="data/processed
     
- 8. In order to run the models on the data please use the following script:
+  8. In order to run the models on the data please use the following script:
+ 
  
  
     python src/prediction_model.py --training_file="data/processed/training_split.csv" --testing_file="data/processed/testing_split.csv" --results_dir="results/"
+    
+  9. If you want to check the model comparison click [here](https://github.com/UBC-MDS/boardgame_rating_predictor/blob/main/results/model_comparison_table.csv)
+
 
 ## Dependencies
 
