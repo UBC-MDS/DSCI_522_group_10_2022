@@ -22,7 +22,7 @@ library(kableExtra)
 
 # Introduction
 
-According to a small [survey](https://boardgamegeek.com/thread/557292/average-how-long-do-you-take-develop-game) on [BoardGameGeek](https://boardgamegeek.com/), many board game developers report that it takes them several months to develop a board game, sometimes over a year [@bbg-survey]. As board game enthusiasts, we aim to answer the following question: Given certain characteristics about a new board game, can we use a machine learning model to predict how users would rate the board game? Answering this question will help board game creators understand which characteristics enhance user enjoyment and make better decisions as they develop the game, saving them time and improving the popularity of their new board game.
+According to a small [survey](https://boardgamegeek.com/thread/557292/average-how-long-do-you-take-develop-game) on [BoardGameGeek](https://boardgamegeek.com/), many board game developers report that it takes them several months to develop a board game, sometimes over a year [@survey]. As board game enthusiasts, we aim to answer the following question: Given certain characteristics about a new board game, can we use a machine learning model to predict how users would rate the board game? Answering this question will help board game creators understand which characteristics enhance user enjoyment and make better decisions as they develop the game, saving them time and improving the popularity of their new board game.
 
 # Methods
 
@@ -83,3 +83,5 @@ knitr::include_graphics("../results/results_plot.png")
 ```
 
 Overall, our board game user rating predictor needs to be fine-tuned before it can be used to aid board game developers with their creative decisions. Since the test score was not very high, it would be useful to output the probability estimates of the predicted ratings so users can know how confident the model is about each prediction. The model could potentially be improved using feature selection methods to limit the number and choice of features to only those that are most important in predicting the user rating, thus eliminating "noisy" features that drown out the important patterns in the data when training the model. Additionally, the random forest model was slow and computationally intensive, so perhaps the Ridge linear regression model could be improved using polynomial feature extraction and feature selection to produce a more efficient solution.
+
+# References
