@@ -1,10 +1,11 @@
 # Board Game User Rating Predictor
 
 - contributors: Marian Agyby, Ashwin Babu, Vikram Grewal, Eric Tsai
+- URL of the project repo is [here](https://github.com/UBC-MDS/boardgame_rating_predictor)
 
-## Introduction
+## Project Proposal
 
-In this project we aim to answer the following question: Given certain characteristics about a new board game, how would users rate the board game? Answering this question will help board game creators understand which characteristics enhance user enjoyment and make better decisions as they develop the game, saving them time and improving the popularity of their new board game.
+In this project we aim to answer the following question: Given certain characteristics about a new board game, how would users rate the board game? Answering this question will help board game creators understand which characteristics enhance user enjoyment and improve their developing capabilities towards a successful game, minimizing their R&D time and developing a popular new board game.
 
 To answer this question, we are using a large data set containing user ratings and reviews for thousands of board games, created by [BoardGameGeek](https://boardgamegeek.com/) and made available by [tidytuesday](https://github.com/rfordatascience/tidytuesday), which can be found [here](https://github.com/rfordatascience/tidytuesday/tree/master/data/2022/2022-01-25). The data consists of two data sets, one containing the user ratings, and the other containing information about the board games, including names and descriptions, as well as several characteristics such as playing time, minimum age, number of  players, etc. We will join the two data sets and build a regression model that predicts the average user rating based on various game features.
 
