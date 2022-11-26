@@ -36,3 +36,29 @@ We used the random forest (RF) algorithm to build a regression model that predic
 
 To perform this analysis and create this report, the Python and R programming languages [@Python; @R] were used, along with the following Python and R packages: docopt [@docopt], numpy [@numpy], pandas [@pandas], altair [@altair], scikit-learn [@learn], tidyverse [@tidy], and knitr [@knitr]. The code used to conduct this analysis and create this report can be found [here](https://github.com/UBC-MDS/boardgame_rating_predictor).
 
+# Results & Discussion
+
+To better understand the data, we conducted exploratory data analysis by plotting the distributions of the average rating target, the numeric features, as well as a few categorical features. Figure 1 below shows that the distribution of the average user ratings has a nearly symmetrical bell-shape and a slight left skew, with most user ratings falling between 6-7 on a 10 point scale. 
+
+```{r rating-distribution, echo=FALSE, fig.cap="Figure 1. Distribution of average board game user ratings.", out.width='60%'}
+knitr::include_graphics("../results/rating_distribution.png")
+```
+
+With the exception of minimum age, the distributions of the numeric features appear to be heavily right skewed with most values falling towards lower values (Figure 2).
+
+```{r numeric-distributions, echo=FALSE, fig.cap="Figure 2. Distribution of numeric predictors.", out.width = '100%'}
+knitr::include_graphics("../results/numeric_feature_distribution.png")
+```
+
+To visualize the distributions of the categorical features, we augmented the training set and added a column that binarizes the average rating target column, with values larger than or equal to 7 being "high" and values less than 7 being "low". This allows us to observe which categories are found in board games that tend to be rated "high" versus "low", as shown in Figures 3 and 4 below. For example, we can see that many more card games are rated low than high, while war games have equal counts of high and low ratings.
+
+```{r boardgame-categories, echo=FALSE, fig.cap="Figure 3. Number of board games rated high (7-10) versus low (1-6) for the 10 most common board game categories.", out.width = '75%'}
+knitr::include_graphics("../results/top_10_boardgame_categories.png")
+```
+
+```{r boardgame-mechanics, echo=FALSE, fig.cap="Figure 4. Number of board games rated high (7-10) versus low (1-6) for the 10 most common board game mechanics.", out.width = '75%'}
+knitr::include_graphics("../results/top_10_boardgame_mechanics.png")
+```
+
+As we have a combination of categorical, numerical, and textual features, we encoded the data using a column transformer to apply the following transformations: `StandardScaler()` on the numeric features, `CountVectorizer()` on the textual features, and `MultiLabelBinarizer()` on the categorical features. `MultiLabelBinarizer()` was used rather than `OneHotEncoder()` since the categorical features contain lists of multiple values per observation.
+
