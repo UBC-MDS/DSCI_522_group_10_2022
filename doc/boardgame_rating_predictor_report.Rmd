@@ -1,0 +1,19 @@
+---
+title: "Predicting board game user ratings with a machine learning model"
+author: "Marian Agyby </br>"
+date: "2022/11/25 (updated: `r Sys.Date()`)"
+always_allow_html: true
+output: 
+  html_document:
+    toc: true
+  github_document:
+    toc: true
+bibliography: boardgame_refs.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+```
