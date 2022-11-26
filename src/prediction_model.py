@@ -42,7 +42,7 @@ from sklearn.linear_model import Ridge, RidgeCV
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.svm import SVC
 
-from sklearn.metrics import make_scorer, mean_squared_error, r2_score
+from sklearn.metrics import make_scorer, mean_squared_error, r2_score, mean_absolute_percentage_error
 
 from sklearn.base import TransformerMixin
 
@@ -250,6 +250,13 @@ def main(training_file, testing_file, results_dir):
         "Predicted Scores": pipe_rfr_opt.predict(X_test)
     }
     results_df = pd.DataFrame(results_dict)
+    results_df.to_csv(results_dir + "prediction_comparison_table.csv")
+
+    # Get MAPE score and test score of model and save as CSV
+    mape = mean_absolute_percentage_error(results_dict["Actual Scores"], results_dict["Predicted Scores"])
+    score = pipe_rfr_opt.score(X_test, y_test)
+    model_error_score_table = pd.DataFrame({"MAPE": mape, "Score": score}, index=[0])
+    model_error_score_table.to_csv(results_dir + "model_error_score_table.csv")
 
     # Create a dataframe for plotting a 1:1 line for visualizing what 100% accuracy would look like
     line_df = pd.DataFrame(
@@ -281,6 +288,8 @@ def main(training_file, testing_file, results_dir):
     # Test if results are output
     test_results_exist(results_dir + "results_plot.png")
     test_results_exist(results_dir + "model_comparison_table.csv")
+    test_results_exist(results_dir + "prediction_comparison_table.csv")
+    test_results_exist(results_dir + "model_error_score_table.csv")
 
 # END MAIN-----------------------------------------------------------------------------------------
 
