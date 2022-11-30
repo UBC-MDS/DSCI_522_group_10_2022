@@ -24,6 +24,7 @@ The final report of the project can be found [here](https://github.com/UBC-MDS/b
 
 
 ## Usage
+To replicate this analysis, you can follow these instructions and run the corresponding make commands. These instructions will need to be ran in a Unix shell.
   1. Download the dependency file from the .yaml [file](https://github.com/UBC-MDS/boardgame_rating_predictor/blob/main/envboard.yaml)
   
   2. Create the environment
@@ -41,27 +42,39 @@ The final report of the project can be found [here](https://github.com/UBC-MDS/b
   
     cd boardgame_rating_predictor
   
+  5. To replicate the analysis in its entirety, you can run the following command.
 
-  5. To Download the raw data set use the command:
+    make all
+
+  6. To delete the files and figures created from the analysis and return the repository to a clean state, run the following.
+
+    make clean
   
-
-    python src/download_data.py --url=https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-01-25/ratings.csv --out_file=data/raw/ratings.csv
-
-
-    python src/download_data.py --url=https://github.com/rfordatascience/tidytuesday/blob/master/data/2022/2022-01-25/details.csv --out_file=data/raw/details.csv
-
-  6. In order to access the EDA file go to this [link](https://github.com/UBC-MDS/boardgame_rating_predictor/blob/main/src/boardgame_rating_eda.ipynb) and run it on any IDE.
-  
-  7. In order to process the raw data and save it under the `data/processed` folder run this script
-  
-  
-    python src/preprocess_boardgame_data.py --in_file1="data/raw/ratings.csv" --in_file2="data/raw/details.csv" --out_dir="data/processed
+  7. To run individual parts of the script, follow the instructions below:
     
-  8. In order to run the models on the data please use the following script:
- 
- 
- 
-    python src/prediction_model.py --training_file="data/processed/training_split.csv" --testing_file="data/processed/testing_split.csv" --results_dir="results/"
+    To Download the raw data set use the command:
+  
+      make data/raw/ratings.csv
+      make data/raw/details.csv
+    
+    To perform preprocessing on the raw data, use the command:
+
+      make data/processed
+    
+    To just run the exploratory data analysis and generate the figures, use the command:
+
+      make eda
+    
+    To create the regression model and generate the scores from prediction on the data, use the command:
+
+      make predict_model
+    
+    To generate the final report, use the command:
+
+      make doc/boardgame_rating_predictor_report.html
+
+  8. For a more in-depth look at the exploratory data analysis, see [link](https://github.com/UBC-MDS/boardgame_rating_predictor/blob/main/src/boardgame_rating_eda.ipynb) or run the file on any IDE.
+  
     
   9. If you want to check the model performance comparison click [here](https://github.com/UBC-MDS/boardgame_rating_predictor/blob/main/results/model_comparison_table.csv)
 
