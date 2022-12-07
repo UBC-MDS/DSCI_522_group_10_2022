@@ -49,9 +49,6 @@ def main(in_file, out_dir):
 
     rating_plot = plot_rating_distribution(train_df)
     numeric_feats_bar_plot = plot_numeric_feature_distribution(train_df)
-    # top_10_categories_plot = plot_top_10_categories(binarized_rating_df)
-    # top_10_mechanics_plot = plot_top_10_mechanics(binarized_rating_df)
-    # top_10_families_plot = plot_top_10_families(binarized_rating_df)
     top_10_categories_plot = plot_top_10(binarized_rating_df, "boardgamecategory")
     top_10_mechanics_plot = plot_top_10(binarized_rating_df, "boardgamemechanic")
     top_10_families_plot = plot_top_10(binarized_rating_df, "boardgamefamily")
@@ -130,70 +127,6 @@ def plot_top_10(df, feature):
         color = alt.Color("rating", title="Rating")
     )
     return top_10_plot
-
-# def plot_top_10_categories(df):
-#     '''
-#     Creates a bar chart of the top 10 boardgame categories
-#     '''
-#     category_binary_df = binarize_list_column(df, "boardgamecategory")
-#     top_10_categories = category_binary_df.sum(numeric_only=True).sort_values(ascending=False)[1:11].index.tolist()
-#     category_long = df_to_long_format(category_binary_df, "boardgamecategory")
-#     top_10_categories_plot = alt.Chart(
-#         category_long.query("boardgamecategory in @top_10_categories"),
-#         title = "Comparing ratings of top 10 boardgame categories"
-#     ).mark_bar().encode(
-#         x = alt.X("rating", axis=alt.Axis(title=None, labels=False, ticks=False)),
-#         y = alt.Y("value", title="Count"),
-#         column = alt.Column('boardgamecategory', header=alt.Header(title=None, labelOrient='bottom'), sort=top_10_categories),
-#         color = alt.Color("rating", title="Rating")
-#     )
-#     return top_10_categories_plot
-
-
-# def plot_top_10_mechanics(df):
-#     '''
-#     Creates a bar chart of the top 10 boardgame mechanics
-#     '''
-#     mechanic_count_df = binarize_list_column(df, "boardgamemechanic")
-#     top_10_mechanics = mechanic_count_df.sum(numeric_only=True).sort_values(ascending=False)[1:11].index.tolist()
-#     mechanic_long = df_to_long_format(mechanic_count_df, "boardgamemechanic")
-#     top_10_mechanic_plot = alt.Chart(
-#         mechanic_long.query("boardgamemechanic in @top_10_mechanics"),
-#         title = "Comparing ratings of top 10 boardgame mechanics"
-#     ).mark_bar().encode(
-#         alt.X("rating", axis=alt.Axis(title=None, labels=False, ticks=False)),
-#         alt.Y("value", title="Count"),
-#         column = alt.Column(
-#             'boardgamemechanic', 
-#             header = alt.Header(title=None, labelOrient='bottom', labelAngle=330, labelAnchor="end"),
-#             sort = top_10_mechanics
-#         ),
-#         color = alt.Color("rating", title="Rating")
-#     )
-#     return top_10_mechanic_plot
-
-
-# def plot_top_10_families(df):
-#     '''
-#     Creates a bar chart of the top 10 boardgame families
-#     '''
-#     family_count_df = binarize_list_column(df, "boardgamefamily")
-#     top_10_families = family_count_df.sum(numeric_only=True).sort_values(ascending=False)[1:11].index.tolist()
-#     family_long = df_to_long_format(family_count_df, "boardgamefamily")
-#     top_10_family_plot = alt.Chart(
-#         family_long.query("boardgamefamily in @top_10_families"),
-#         title = "Comparing ratings of top 10 boardgame families"
-#     ).mark_bar().encode(
-#         alt.X("rating", axis=alt.Axis(title=None, labels=False, ticks=False)),
-#         alt.Y("value", title="Count"),
-#         column = alt.Column(
-#             'boardgamefamily', 
-#             header = alt.Header(title=None, labelOrient='bottom', labelAngle=330, labelAnchor="end"),
-#             sort = top_10_families
-#         ),
-#         color = alt.Color("rating", title="Rating")
-#     )
-#     return top_10_family_plot
 
 
 def augment_df(df):
