@@ -126,16 +126,19 @@ baseline model and tested the performance of two regression models, the
 ridge linear regression model and the random forest (RF) model. For each
 model, we used 5-fold cross-validation in a randomized search to find
 their respective hyperparameter values that return the best score, using
-the $R^2$ score as the performance metric. The table below shows that
-both models perform better than the dummy baseline, although they have
-fairly low cross-validation scores with less than 50% accuracy. The RF
-model returns a better cross-validation score (0.410) than the ridge
-model (0.375), although it has a much slower fit time. Additionally,
-both models appear to be over-fitting the data, with a large gap between
-the train score and cross-validation score, despite hyperparameter
-optimization. Nonetheless, since the RF model produced a higher
-cross-validation score, we refit the data using the RF model as the
-final board game rating predictor.
+the $R^2$ score as the performance metric. The mean absolute percent
+error (MAPE) scores are also shown to display how far off predicted user
+ratings were from their actual values. Table 1 below shows that both
+models perform better than the dummy baseline, although they have fairly
+low cross-validation scores with less than 50% accuracy. The RF model
+returns a better cross-validation $R^2$ score (0.410) than the ridge
+model (0.375), although it has a much slower fit time. The MAPE scores
+are also slightly better for the RF model (7.6%) than for the Ridge
+model (7.8%). Additionally, both models appear to be over-fitting the
+data, with a large gap between the train score and cross-validation
+score, despite hyperparameter optimization. Nonetheless, since the RF
+model produced better cross-validation score, we refit the data using
+the RF model as the final board game rating predictor.
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
@@ -215,25 +218,54 @@ train_r2
 0.777
 </td>
 </tr>
+<tr>
+<td style="text-align:left;">
+test_MAPE
+</td>
+<td style="text-align:right;">
+-0.102
+</td>
+<td style="text-align:right;">
+-0.078
+</td>
+<td style="text-align:right;">
+-0.076
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+train_MAPE
+</td>
+<td style="text-align:right;">
+-0.102
+</td>
+<td style="text-align:right;">
+-0.062
+</td>
+<td style="text-align:right;">
+-0.044
+</td>
+</tr>
 </tbody>
 </table>
 
 Our final model performed moderately on the test data, with a $R^2$
-score of 0.480. As such, the model performed slightly better on the test
-set than on the training set. Considering the large size of the data set
-and 50/50 train/test split, this test score can be considered a reliable
-indicator of our model’s performance on unseen data. Figure 5 below
-shows how the model performed on the test data as a scatter plot of the
-predicted versus actual user ratings. The overall accuracy of the
-predictions are portrayed by the orange fit line, which appears to be
-askew from perfect accuracy indicated by the blue line. Additionally,
-there appears to be a lot of variation in the predictions, as the points
-appear to be spread out away from the orange fit line. Nonetheless, the
-model appears to be more accurate at predicting ratings around 6.5, as
-shown by the intersection of the blue and orange lines. This aligns with
-the distribution of user ratings shown in Figure 1, suggesting that our
-model is better at predicting commonly occurring median ratings than
-rarely occurring high or low ratings.
+score of 0.480 and a MAPE score of 7.3%. As such, the model performed
+slightly better on the test set than on the training set. Considering
+the large size of the data set and 50/50 train/test split, this test
+score can be considered a reliable indicator of our model’s performance
+on unseen data. Figure 5 below shows how the model performed on the test
+data as a scatter plot of the predicted versus actual user ratings. The
+overall accuracy of the predictions are portrayed by the orange fit
+line, which appears to be askew from perfect accuracy indicated by the
+blue line. Additionally, there appears to be a lot of variation in the
+predictions, as the points appear to be spread out away from the orange
+fit line. Nonetheless, the model appears to be more accurate at
+predicting ratings around 6.5, as shown by the intersection of the blue
+and orange lines. This aligns with the distribution of user ratings
+shown in Figure 1, suggesting that our model is better at predicting
+commonly occurring median ratings than rarely occurring high or low
+ratings.
 
 <img src="../results/results_plot.png" alt="Figure 5. Scatter plot of actual vs. predicted user ratings of board games in the test set using the final model. Blue line indicates where predicted ratings equal the actual ratings with 100% accuracy. Orange line is the linear fit between the actual and predicted ratings." height="50%" />
 
