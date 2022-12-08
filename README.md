@@ -103,6 +103,9 @@ To replicate this analysis, you can follow these instructions and run the corres
     - lightgbm
     - vl_convert
 
+## Makefile dependency diagram
+<img src="Makefile.png">
+
 ## License
 
 All Board Game User Rating Predictor materials are licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0) License and the MIT License.
