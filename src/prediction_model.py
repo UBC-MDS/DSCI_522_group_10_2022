@@ -80,6 +80,73 @@ class MyMultiLabelBinarizer(TransformerMixin):
 
 # START FUNCTIONS----------------------------------------------------------------------------------
 
+def ridge_model(preprocessor, cross_val_results, scoring_dict, X_train, y_train):
+    # Create pipeline for Ridge model hyperparameter optimization
+    pipe_ridge = make_pipeline(
+        preprocessor,
+        Ridge()
+    )
+
+    # Create parameter distribution for Ridge alpha hyperparameter
+    param_dist_ridge = {
+        "ridge__alpha": 10.0 ** np.arange(-6, 6, 2)
+    }
+
+    # Perform randomized search for optimal hyperparameter
+    ridge_search = RandomizedSearchCV(
+        pipe_ridge, param_dist_ridge, n_iter=12, n_jobs=-1, return_train_score=True
+    )
+    ridge_search.fit(X_train, y_train)
+
+    # Define new Ridge pipeline with optimal alpha from search
+    pipe_ridge_opt = make_pipeline(
+        preprocessor,
+        Ridge(alpha=ridge_search.best_params_["ridge__alpha"])
+    )
+
+    # Perform cross-validation and store results in data frame
+    cross_val_results["ridge"] = pd.DataFrame(cross_validate(pipe_ridge_opt,
+                                                             X_train, 
+                                                             y_train, 
+                                                             return_train_score=True, 
+                                                             scoring=scoring_dict)).agg(['mean', 'std']).round(3).T
+
+def rfr(preprocessor, cross_val_results, scoring_dict, X_train, y_train):
+    # Define Random Forest Regressor (RFR) pipeline
+    pipe_rfr = make_pipeline(
+        preprocessor,
+        RandomForestRegressor(n_jobs=-1)
+    )
+
+    # Define RFR hyperparameter options for optimization
+    param_dist_rfr = {
+        "randomforestregressor__max_depth": np.arange(20, 100, 2),
+        "randomforestregressor__bootstrap": [True, False],
+        "randomforestregressor__min_samples_leaf": [1, 2, 4],
+        "randomforestregressor__min_samples_split": [2, 5, 10]
+    }
+
+    # Perform hyperparameter optimization for RFR
+    rfr_search = RandomizedSearchCV(
+        pipe_rfr, param_dist_rfr, n_iter=10, n_jobs=-1, return_train_score=True
+    )
+    rfr_search.fit(X_train.iloc[0:2000], y_train.iloc[0:2000])
+
+    # Define new pipeline for RFR using optimized hyperparameters
+    pipe_rfr_opt = make_pipeline(
+        preprocessor,
+        RandomForestRegressor(max_depth=rfr_search.best_params_["randomforestregressor__max_depth"],
+                             bootstrap=rfr_search.best_params_["randomforestregressor__bootstrap"],
+                             min_samples_leaf=rfr_search.best_params_["randomforestregressor__min_samples_leaf"],
+                             min_samples_split=rfr_search.best_params_["randomforestregressor__min_samples_split"],
+                             n_jobs=-1)
+    )
+
+    # Perform cross-validation and store results in data frame
+    cross_val_results["random_forest"] = pd.DataFrame(cross_validate(pipe_rfr_opt, X_train.iloc[0:2000], y_train.iloc[0:2000], return_train_score=True, scoring=scoring_dict)).agg(['mean', 'std']).round(3).T
+
+    return pipe_rfr_opt
+
 # Function provided by Joell Ostblom
 def save_chart(chart, filename, scale_factor=1):
     '''
@@ -103,6 +170,16 @@ def save_chart(chart, filename, scale_factor=1):
             f.write(vlc.vegalite_to_png(chart.to_dict(), scale=scale_factor))
     else:
         raise ValueError("Only svg and png formats are supported")
+
+def save_cross_val_results(cross_val_results, results_dir):
+    # Drop uneeded columns from scoring dataframes (originally kept for analysis purposes)
+    cross_val_results["dummy_regressor"] = cross_val_results["dummy_regressor"].drop(columns="std").rename(columns={"mean": "Dummy_Regressor"})
+    cross_val_results["random_forest"] = cross_val_results["random_forest"].drop(columns="std").rename(columns={"mean": "Random_Forest"})
+    cross_val_results["ridge"] = cross_val_results["ridge"].drop(columns="std").rename(columns={"mean": "Ridge"})
+
+    # Combine all results into one results data frame and save it
+    cross_val_results_df = cross_val_results["dummy_regressor"].join(cross_val_results["ridge"], how="inner").join(cross_val_results["random_forest"], how="inner")
+    cross_val_results_df.to_csv(results_dir + "model_comparison_table.csv")
 
 def test_results_exist(file_path):
     assert os.path.isfile(file_path), f"Could not locate {file_path}."
@@ -169,80 +246,18 @@ def main(training_file, testing_file, results_dir):
     dummy_regressor = DummyRegressor()
     cross_val_results['dummy_regressor'] = pd.DataFrame(cross_validate(dummy_regressor, X_train, y_train, return_train_score = True, scoring=scoring_dict)).agg(['mean', 'std']).round(3).T
 
-    # Create pipeline for Ridge model hyperparameter optimization
-    pipe_ridge = make_pipeline(
-        preprocessor,
-        Ridge()
-    )
+    # Create and score ridge model using helper function
+    ridge_model(preprocessor, cross_val_results, scoring_dict, X_train, y_train)
 
-    # Create parameter distribution for Ridge alpha hyperparameter
-    param_dist_ridge = {
-        "ridge__alpha": 10.0 ** np.arange(-6, 6, 2)
-    }
-
-    # Perform randomized search for optimal hyperparameter
-    ridge_search = RandomizedSearchCV(
-        pipe_ridge, param_dist_ridge, n_iter=12, n_jobs=-1, return_train_score=True
-    )
-    ridge_search.fit(X_train, y_train)
-
-    # Define new Ridge pipeline with optimal alpha from search
-    pipe_ridge_opt = make_pipeline(
-        preprocessor,
-        Ridge(alpha=ridge_search.best_params_["ridge__alpha"])
-    )
-
-    # Perform cross-validation and store results in data frame
-    cross_val_results["ridge"] = pd.DataFrame(cross_validate(pipe_ridge_opt,
-                                                             X_train, 
-                                                             y_train, 
-                                                             return_train_score=True, 
-                                                             scoring=scoring_dict)).agg(['mean', 'std']).round(3).T
-
-    # Define Random Forest Regressor (RFR) pipeline
-    pipe_rfr = make_pipeline(
-        preprocessor,
-        RandomForestRegressor(n_jobs=-1)
-    )
-
-    # Define RFR hyperparameter options for optimization
-    param_dist_rfr = {
-        "randomforestregressor__max_depth": np.arange(20, 100, 2),
-        "randomforestregressor__bootstrap": [True, False],
-        "randomforestregressor__min_samples_leaf": [1, 2, 4],
-        "randomforestregressor__min_samples_split": [2, 5, 10]
-    }
-
-    # Perform hyperparameter optimization for RFR
-    rfr_search = RandomizedSearchCV(
-        pipe_rfr, param_dist_rfr, n_iter=10, n_jobs=-1, return_train_score=True
-    )
-    rfr_search.fit(X_train.iloc[0:2000], y_train.iloc[0:2000])
-
-    # Define new pipeline for RFR using optimized hyperparameters
-    pipe_rfr_opt = make_pipeline(
-        preprocessor,
-        RandomForestRegressor(max_depth=rfr_search.best_params_["randomforestregressor__max_depth"],
-                             bootstrap=rfr_search.best_params_["randomforestregressor__bootstrap"],
-                             min_samples_leaf=rfr_search.best_params_["randomforestregressor__min_samples_leaf"],
-                             min_samples_split=rfr_search.best_params_["randomforestregressor__min_samples_split"],
-                             n_jobs=-1)
-    )
-
-    # Perform cross-validation and store results in data frame
-    cross_val_results["random_forest"] = pd.DataFrame(cross_validate(pipe_rfr_opt, X_train.iloc[0:2000], y_train.iloc[0:2000], return_train_score=True, scoring=scoring_dict)).agg(['mean', 'std']).round(3).T
-
-    # Drop uneeded columns from scoring dataframes (originally kept for analysis purposes)
-    cross_val_results["dummy_regressor"] = cross_val_results["dummy_regressor"].drop(columns="std").rename(columns={"mean": "Dummy_Regressor"})
-    cross_val_results["random_forest"] = cross_val_results["random_forest"].drop(columns="std").rename(columns={"mean": "Random_Forest"})
-    cross_val_results["ridge"] = cross_val_results["ridge"].drop(columns="std").rename(columns={"mean": "Ridge"})
-
-    # Combine all results into one results data frame and save it
-    cross_val_results_df = cross_val_results["dummy_regressor"].join(cross_val_results["ridge"], how="inner").join(cross_val_results["random_forest"], how="inner")
-    cross_val_results_df.to_csv(results_dir + "model_comparison_table.csv")
+    # Create and score random forest regressor model using helper function
+    # Since rfr is the optimal model, assign a variable for the pipe of rfr
+    pipe_rfr_opt = rfr(preprocessor, cross_val_results, scoring_dict, X_train, y_train)
 
     # Fit the optimal RFR model
     pipe_rfr_opt.fit(X_train, y_train)
+
+    # Save the crossval results as a csv for the report
+    save_cross_val_results(cross_val_results, results_dir)
 
     # Create dataframe for actual scores from the testing data and the predicted scores from the model
     results_dict = {
