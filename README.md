@@ -50,29 +50,12 @@ To replicate this analysis, you can follow these instructions and run the corres
 
     make clean
   
-  7. To run individual parts of the script, follow the instructions below:
+  7. To just download the raw data files, use the following commands:
     
-    To Download the raw data set use the command:
-  
-      make data/raw/ratings.csv
-      make data/raw/details.csv
-    
-    To perform preprocessing on the raw data, use the command:
+    python src/download_data.py --url="https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-01-25/ratings.csv" --out_file="data/raw/ratings.csv"
+    python src/download_data.py --url="https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-01-25/details.csv" --out_file="data/raw/details.csv"
 
-      make data/processed
-    
-    To just run the exploratory data analysis and generate the figures, use the command:
-
-      make eda
-    
-    To create the regression model and generate the scores from prediction on the data, use the command:
-
-      make predict_model
-    
-    To generate the final report, use the command:
-
-      make doc/boardgame_rating_predictor_report.html
-
+      
   8. For a more in-depth look at the exploratory data analysis, see [link](https://github.com/UBC-MDS/boardgame_rating_predictor/blob/main/src/boardgame_rating_eda.ipynb) or run the file on any IDE.
   
     
