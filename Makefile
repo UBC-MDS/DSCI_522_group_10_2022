@@ -37,5 +37,5 @@ doc/boardgame_rating_predictor_report.html : doc/boardgame_refs.bib doc/boardgam
 # delete all generated files and figures
 clean: 
 	rm -rf data
-	rm -f results
+	rm -rf results
 	rm -f doc/boardgame*
