@@ -38,4 +38,3 @@ doc/boardgame_rating_predictor_report.html : doc/boardgame_refs.bib doc/boardgam
 clean: 
 	rm -rf data
 	rm -rf results
-	rm -f doc/boardgame_rating*
