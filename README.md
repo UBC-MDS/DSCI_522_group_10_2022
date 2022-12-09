@@ -29,7 +29,7 @@ To replicate this analysis, you can follow these instructions and run the corres
   
   2. Create and activate the environment
   
-    conda env -f envboard.yaml
+    conda env create -f envboard.yaml
     conda activate envboard
   
   3. Clone the repository from:
