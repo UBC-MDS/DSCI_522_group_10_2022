@@ -3,6 +3,8 @@ FROM jupyter/scipy-notebook
 
 RUN pip install docopt-ng==0.8.1 \
     && pip install vl-convert-python==0.5.0
+RUN conda install -c conda-forge -y pandoc
+RUN pip install joblib --quiet
 
 RUN conda install python-graphviz -y \
     && conda install requests[version='>=2.24.0'] -y \
@@ -17,7 +19,6 @@ RUN conda install python-graphviz -y \
     && conda install pandas[version='<1.5'] -y \
     && conda install matplotlib[version='>=3.2.2'] -y \
     && conda install graphviz -y \
-    && conda install -c anaconda docopt -y \
     && conda install -c conda-forge eli5 -y \
     && conda install -c conda-forge shap -y \
     && conda install -c conda-forge imbalanced-learn -y 
