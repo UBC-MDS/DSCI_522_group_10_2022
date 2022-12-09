@@ -94,7 +94,7 @@ def ridge_model(preprocessor, cross_val_results, scoring_dict, X_train, y_train)
 
     # Perform randomized search for optimal hyperparameter
     ridge_search = RandomizedSearchCV(
-        pipe_ridge, param_dist_ridge, n_iter=12, n_jobs=-1, return_train_score=True
+        pipe_ridge, param_dist_ridge, n_iter=12, n_jobs=1, return_train_score=True
     )
     ridge_search.fit(X_train, y_train)
 
