@@ -43,7 +43,9 @@ To replicate the analysis, install Docker, clone this repository, then run the f
         
     b. If you are using a Mac M1 or M2 operating system:
 
-        docker run  --rm --platform linux/amd64 -v  “$PWD”:/home axb2860/boardgame_rating_predictor make -C /home all
+        docker run  --rm  -v  “$PWD”:/home axb2860/boardgame_rating_predictor make -C /home all
+        
+      Note: you can add `--platform linux/amd64` as an optional flag to the command above
 
 3. To delete the files and figures created from the analysis and return the repository to a clean state, run the following:
 
@@ -53,7 +55,9 @@ To replicate the analysis, install Docker, clone this repository, then run the f
         
     b. If you are using a Mac M1 or M2 operating system:
 
-        docker run  --rm --platform linux/amd64 -v  “$PWD”:/home axb2860/boardgame_rating_predictor make -C /home clean
+        docker run  --rm -v  “$PWD”:/home axb2860/boardgame_rating_predictor make -C /home clean
+        
+      Note: you can add `--platform linux/amd64` as an optional flag to the command above
 
 ### Without Using Docker
 
