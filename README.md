@@ -20,20 +20,50 @@ The exploratory data analysis report can be found [here](https://github.com/UBC-
 
 ## Report
 
-The final report of the project can be found [here](https://github.com/UBC-MDS/boardgame_rating_predictor/tree/main/doc)
+The final report of the project can be found [here](https://github.com/UBC-MDS/boardgame_rating_predictor/tree/main/doc).
 
 
 ## Usage
 
-Disclaimer: replicating this analysis takes some time (about 30 minutes) to run.
+Note: replicating this analysis takes some time (about 30 minutes) to run. 
 
-To replicate this analysis, you can follow these instructions and run the corresponding make commands. These instructions will need to be ran in a Unix shell.
+### Using Docker
+
+To replicate the analysis, install Docker, clone this repository, then run the following commands in a Unix shell (terminal) from the root directory of this project:
+
+1. Pull the docker image from DockerHub:
+
+        docker pull axb2860/boardgame_rating_predictor
+
+2. Run the docker image:
+
+    a. If you are using a Windows operating system:
+       
+        docker run --rm -v  "/$(pwd)://home" axb2860/boardgame_rating_predictor make -C //home all
+        
+    b. If you are using a Mac M1 or M2 operating system:
+
+        docker run  --rm --platform linux/amd64 -v  “$PWD”:/home axb2860/boardgame_rating_predictor make -C /home all
+
+3. To delete the files and figures created from the analysis and return the repository to a clean state, run the following:
+
+    a. If you are using a Windows operating system:
+       
+        docker run --rm -v  "/$(pwd)://home" axb2860/boardgame_rating_predictor make -C //home clean
+        
+    b. If you are using a Mac M1 or M2 operating system:
+
+        docker run  --rm --platform linux/amd64 -v  “$PWD”:/home axb2860/boardgame_rating_predictor make -C /home clean
+
+### Without Using Docker
+
+To replicate this analysis without docker, follow these instructions and run the corresponding commands in a Unix shell (terminal).
   1. Download the dependency file from the .yaml [file](https://github.com/UBC-MDS/boardgame_rating_predictor/blob/main/envboard.yaml)
   
   2. Create and activate the environment
   
     conda env create -f envboard.yaml
-    
+ 
     conda activate envboard
   
   3. Clone the repository from:
@@ -41,7 +71,7 @@ To replicate this analysis, you can follow these instructions and run the corres
   
       https://github.com/UBC-MDS/boardgame_rating_predictor.git
   
-  4. Move to the cloned directory
+  4. Move to the root directory of this project
   
   
     cd boardgame_rating_predictor
@@ -57,7 +87,7 @@ To replicate this analysis, you can follow these instructions and run the corres
   7. To just download the raw data files, use the following commands:
     
     python src/download_data.py --url="https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-01-25/ratings.csv" --out_file="data/raw/ratings.csv"
-    
+ 
     python src/download_data.py --url="https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-01-25/details.csv" --out_file="data/raw/details.csv"
 
       
