@@ -88,6 +88,11 @@ To replicate this analysis, you can follow these instructions and run the corres
     - lightgbm
     - vl_convert
 
+- R 4.2.1 and R packages:
+    - tidyverse==1.3.2
+    - knitr==1.40
+    - kableExtra==1.3.4
+
 ## Makefile dependency diagram
 <img src="Makefile.png">
 
