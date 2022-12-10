@@ -24,6 +24,9 @@ The final report of the project can be found [here](https://github.com/UBC-MDS/b
 
 
 ## Usage
+
+Disclaimer: replicating this analysis takes some time (about 30 minutes) to run.
+
 To replicate this analysis, you can follow these instructions and run the corresponding make commands. These instructions will need to be ran in a Unix shell.
   1. Download the dependency file from the .yaml [file](https://github.com/UBC-MDS/boardgame_rating_predictor/blob/main/envboard.yaml)
   
