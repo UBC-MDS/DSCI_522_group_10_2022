@@ -30,6 +30,7 @@ To replicate this analysis, you can follow these instructions and run the corres
   2. Create and activate the environment
   
     conda env create -f envboard.yaml
+    
     conda activate envboard
   
   3. Clone the repository from:
@@ -53,6 +54,7 @@ To replicate this analysis, you can follow these instructions and run the corres
   7. To just download the raw data files, use the following commands:
     
     python src/download_data.py --url="https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-01-25/ratings.csv" --out_file="data/raw/ratings.csv"
+    
     python src/download_data.py --url="https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-01-25/details.csv" --out_file="data/raw/details.csv"
 
       
