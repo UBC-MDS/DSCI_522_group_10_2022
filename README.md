@@ -25,7 +25,7 @@ The final report of the project can be found [here](https://github.com/UBC-MDS/b
 
 ## Usage
 
-Note: replicating this analysis takes some time (about 30 minutes) to run. 
+_Note: replicating this analysis takes some time (about 30 minutes) to run._ 
 
 ### Using Docker
 
@@ -45,7 +45,7 @@ To replicate the analysis, install Docker, clone this repository, then run the f
 
         docker run  --rm  -v  “$PWD”:/home axb2860/boardgame_rating_predictor make -C /home all
         
-      Note: you can add `--platform linux/amd64` as an optional flag to the command above
+      _Note: you can add `--platform linux/amd64` as an optional flag to the command above_
 
 3. To delete the files and figures created from the analysis and return the repository to a clean state, run the following:
 
@@ -57,7 +57,7 @@ To replicate the analysis, install Docker, clone this repository, then run the f
 
         docker run  --rm -v  “$PWD”:/home axb2860/boardgame_rating_predictor make -C /home clean
         
-      Note: you can add `--platform linux/amd64` as an optional flag to the command above
+      _Note: you can add `--platform linux/amd64` as an optional flag to the command above_
 
 ### Without Using Docker
 
@@ -131,6 +131,9 @@ To replicate this analysis without docker, follow these instructions and run the
     - kableExtra==1.3.4
 
 ## Makefile dependency diagram
+
+_Note: click on the image below to view an enlarged version._
+
 <img src="Makefile.png">
 
 ## License
